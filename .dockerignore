@@ -1,0 +1,9 @@
+node_modules/
+.git/
+incident.db
+test-incident.db
+tests/
+docs/
+.superpowers/
+*.md
+.claude/
