@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Incident Tracker</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #f8f9fa;
+      font-family: system-ui, 'Segoe UI', sans-serif;
+      gap: clamp(24px, 5vh, 48px);
+      padding: 20px;
+    }
+
+    .label {
+      font-size: clamp(10px, 1.5vw, 14px);
+      color: #999;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .timer {
+      display: flex;
+      align-items: flex-start;
+      gap: clamp(4px, 1vw, 12px);
+    }
+
+    .unit {
+      text-align: center;
+      min-width: clamp(50px, 8vw, 90px);
+    }
+
+    .digit {
+      font-size: clamp(36px, 7vw, 80px);
+      font-weight: 900;
+      color: #2d6a4f;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      font-family: monospace;
+    }
+
+    .unit.seconds .digit {
+      color: #d62828;
+    }
+
+    .unit-label {
+      font-size: clamp(8px, 1vw, 11px);
+      color: #aaa;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .sep {
+      font-size: clamp(28px, 5vw, 60px);
+      font-weight: 300;
+      color: #ccc;
+      padding-top: clamp(4px, 1vw, 10px);
+      line-height: 1;
+      user-select: none;
+    }
+
+    .timer.error .digit { color: #ccc; }
+
+    #btn-incident {
+      background: #d62828;
+      color: #fff;
+      font-weight: 900;
+      font-size: clamp(16px, 2.5vw, 24px);
+      letter-spacing: 6px;
+      padding: clamp(16px, 3vh, 28px) clamp(32px, 6vw, 72px);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(214, 40, 40, 0.35);
+      text-transform: uppercase;
+      min-width: min(280px, 90vw);
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    #btn-incident:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(214, 40, 40, 0.45);
+    }
+
+    #btn-incident:active { transform: translateY(0); }
+
+    #modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    #modal-overlay.visible { display: flex; }
+
+    .modal {
+      background: #fff;
+      border-radius: 12px;
+      padding: 32px;
+      text-align: center;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+      max-width: 360px;
+      width: 90vw;
+    }
+
+    .modal-subtitle {
+      font-size: 11px;
+      color: #999;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 24px;
+    }
+
+    .modal-actions { display: flex; gap: 12px; justify-content: center; }
+
+    #btn-confirm {
+      background: #d62828;
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 1px;
+      padding: 12px 32px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #btn-cancel {
+      background: #f0f0f0;
+      color: #444;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 12px 32px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <span class="label">Sans incident depuis</span>
+
+  <div class="timer" id="timer">
+    <div class="unit">
+      <div class="digit" id="days">--</div>
+      <div class="unit-label">Jours</div>
+    </div>
+    <span class="sep">:</span>
+    <div class="unit">
+      <div class="digit" id="hours">--</div>
+      <div class="unit-label">Heures</div>
+    </div>
+    <span class="sep">:</span>
+    <div class="unit">
+      <div class="digit" id="minutes">--</div>
+      <div class="unit-label">Min</div>
+    </div>
+    <span class="sep">:</span>
+    <div class="unit seconds">
+      <div class="digit" id="seconds">--</div>
+      <div class="unit-label">Sec</div>
+    </div>
+  </div>
+
+  <button id="btn-incident">INCIDENT</button>
+
+  <div id="modal-overlay">
+    <div class="modal">
+      <div class="modal-subtitle">Confirmer</div>
+      <div class="modal-title">Un incident s'est produit&nbsp;?</div>
+      <div class="modal-actions">
+        <button id="btn-confirm">Confirmer</button>
+        <button id="btn-cancel">Annuler</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Placeholder — JS added in Task 5
+  </script>
+
+</body>
+</html>
