@@ -23,6 +23,15 @@ app.get('/api/status', (req, res) => {
   res.json({ last_incident: row?.last_incident ?? null });
 });
 
+app.post('/api/incident', (req, res) => {
+  const now = new Date().toISOString();
+  db.prepare(`
+    INSERT INTO incidents (id, last_incident) VALUES (1, ?)
+    ON CONFLICT(id) DO UPDATE SET last_incident = excluded.last_incident
+  `).run(now);
+  res.json({ last_incident: now });
+});
+
 app.get('/', (req, res) => {
   res.sendFile(join(__dirname, 'index.html'));
 });
