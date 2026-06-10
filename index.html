@@ -196,7 +196,100 @@
   </div>
 
   <script>
-    // Placeholder — JS added in Task 5
+    let lastIncident = null;
+    let tickInterval = null;
+
+    function pad(n) {
+      return String(Math.floor(n)).padStart(2, '0');
+    }
+
+    function updateDisplay(ms) {
+      const totalSec = Math.floor(ms / 1000);
+      const days = Math.floor(totalSec / 86400);
+      const hours = Math.floor((totalSec % 86400) / 3600);
+      const minutes = Math.floor((totalSec % 3600) / 60);
+      const seconds = totalSec % 60;
+
+      document.getElementById('days').textContent = String(days);
+      document.getElementById('hours').textContent = pad(hours);
+      document.getElementById('minutes').textContent = pad(minutes);
+      document.getElementById('seconds').textContent = pad(seconds);
+    }
+
+    function startTimer(isoTimestamp) {
+      lastIncident = new Date(isoTimestamp).getTime();
+      document.getElementById('timer').classList.remove('error');
+      if (tickInterval) clearInterval(tickInterval);
+      tickInterval = setInterval(() => updateDisplay(Date.now() - lastIncident), 1000);
+      updateDisplay(Date.now() - lastIncident);
+    }
+
+    function showError() {
+      if (tickInterval) clearInterval(tickInterval);
+      document.getElementById('timer').classList.add('error');
+      ['days', 'hours', 'minutes', 'seconds'].forEach(id => {
+        document.getElementById(id).textContent = '--';
+      });
+    }
+
+    async function fetchStatus() {
+      try {
+        const res = await fetch('/api/status');
+        const data = await res.json();
+        if (data.last_incident) {
+          startTimer(data.last_incident);
+        } else {
+          await recordIncident();
+        }
+      } catch {
+        showError();
+        setTimeout(fetchStatus, 10000);
+      }
+    }
+
+    async function recordIncident() {
+      try {
+        const res = await fetch('/api/incident', { method: 'POST' });
+        const data = await res.json();
+        startTimer(data.last_incident);
+      } catch {
+        showError();
+      }
+    }
+
+    // Cross-device sync: re-fetch every 30s, reset if server timestamp differs
+    setInterval(async () => {
+      try {
+        const res = await fetch('/api/status');
+        const data = await res.json();
+        if (data.last_incident && lastIncident) {
+          const serverTs = new Date(data.last_incident).getTime();
+          if (serverTs !== lastIncident) startTimer(data.last_incident);
+        }
+      } catch { /* ignore polling errors */ }
+    }, 30000);
+
+    // Modal
+    document.getElementById('btn-incident').addEventListener('click', () => {
+      document.getElementById('modal-overlay').classList.add('visible');
+    });
+
+    document.getElementById('btn-cancel').addEventListener('click', () => {
+      document.getElementById('modal-overlay').classList.remove('visible');
+    });
+
+    document.getElementById('modal-overlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('modal-overlay')) {
+        document.getElementById('modal-overlay').classList.remove('visible');
+      }
+    });
+
+    document.getElementById('btn-confirm').addEventListener('click', async () => {
+      document.getElementById('modal-overlay').classList.remove('visible');
+      await recordIncident();
+    });
+
+    fetchStatus();
   </script>
 
 </body>
