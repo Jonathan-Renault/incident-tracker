@@ -1,0 +1,4 @@
+node_modules/
+incident.db
+test-incident.db
+.superpowers/
