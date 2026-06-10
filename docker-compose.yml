@@ -1,0 +1,14 @@
+services:
+  incident-tracker:
+    build: .
+    ports:
+      - "3001:3000"
+    volumes:
+      - incident_data:/app/data
+    environment:
+      - NODE_ENV=production
+      - DB_PATH=/app/data/incident.db
+    restart: unless-stopped
+
+volumes:
+  incident_data:
